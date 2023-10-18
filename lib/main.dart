@@ -1,21 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'core/widgets/ui/main_wrapper.dart';
+import 'features/bookmark_feature/presentation/bloc/bookmark_bloc.dart';
+import 'features/weather_feature/presentation/bloc/home_bloc.dart';
 import 'features/weather_feature/presentation/screens/home_screen.dart';
+import 'locator.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // init locator
+  await setup();
+
+  runApp(
+    MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Weather App',
+      home: MultiBlocProvider(
+        providers: [
+          BlocProvider(create: (_) => locator<HomeBloc>()),
+          BlocProvider(create: (_) => locator<BookmarkBloc>()),
+        ],
+        child:  MainWrapper(),
+      ),
+    ),
+  );
 }
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: 'Flutter Demo',
-      home:  HomeScreen(),
-    );
-  }
-}
-
